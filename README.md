@@ -17,7 +17,7 @@ This project is a project created for intuit assessment. Technology used for thi
 - Junit/Mockito
   - For unit testing mockito and junit
 
-- I tried integrating Swagger 2 and Integration Tests, but since I using RestEasy, Swagger 2 is not supported with SpringBoot. And similarly mockMvc integration tests are not supported either. 
+- I tried integrating Swagger 2 but since I am using RestEasy, Swagger 2 is not supported with SpringBoot.
 - I'll continue adding this integration in more standard way of registering filter but that may take some time. 
 - Support for idempotency is there and that is on the POST APIs with the use of **requestGuid** and table MKT_REQUEST
 
@@ -96,5 +96,8 @@ Check following URLs (running this example on your localhost):
 
 6. [Accept a bid on project](http://localhost:8080/mkt/api/v1/projects/{projectId}/accept-bid/{buyerId}) 
   - > http://localhost:8080/mkt/api/v1/projects/{projectId}/accept-bid/{buyerId} (POST)
+  - > > {
+  "requestGuid": "cb2ccaae-f746-4c8e-ac98-d38ba7dc377d" 
+  }
   - > Replace '{projectId}' and '{buyerId}' with values received from Step #3 and #1 respsectively
   - *This step is optional, if not done the scheduler will ACCEPT lower bid automatically*
