@@ -19,6 +19,7 @@ This project is a project created for intuit assessment. Technology used for thi
 
 - I tried integrating Swagger 2 and Integration Tests, but since I using RestEasy, Swagger 2 is not supported with SpringBoot. And similarly mockMvc integration tests are not supported either. 
 - I'll continue adding this integration in more standard way of registering filter but that may take some time. 
+- Support for idempotency is there and that is on the POST APIs with the use of **requestGuid** and table MKT_REQUEST
 
 
 Project Structure
