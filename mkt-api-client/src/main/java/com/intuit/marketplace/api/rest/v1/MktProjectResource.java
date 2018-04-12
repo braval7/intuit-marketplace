@@ -4,10 +4,10 @@ import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
 import com.intuit.marketplace.api.rest.v1.response.MktProjectResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Named;

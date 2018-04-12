@@ -1,5 +1,6 @@
 package com.intuit.marketplace.service.impl;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateActorModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -58,26 +59,27 @@ public class MktActorServiceImpl implements MktActorService {
         return response;
     }
 
-    private void performValidations(MktCreateActorModel model) {
+    @VisibleForTesting
+    void performValidations(MktCreateActorModel model) {
         // validate if input is null
         if (model == null) {
             throw new MktRuntimeException("Provided model is null, Actor creation failed");
         }
 
         // check for required fields
-        if (model.getEmail() == null) {
+        if (model.getEmail() == null || model.getEmail().isEmpty()) {
             throw new MktRuntimeException("Actor email address can't be null, Actor creation failed");
         }
 
-        if (model.getFirstName() == null) {
+        if (model.getFirstName() == null || model.getFirstName().isEmpty()) {
             throw new MktRuntimeException("Actor first name can't be null, Actor creation failed");
         }
 
-        if (model.getLastName() == null) {
+        if (model.getLastName() == null || model.getLastName().isEmpty()) {
             throw new MktRuntimeException("Actor last name can't be null, Actor creation failed");
         }
 
-        if (model.getActorType() == null) {
+        if (model.getActorType() == null || model.getActorType().isEmpty()) {
             throw new MktRuntimeException("Actor Type can't be null, Actor creation failed");
         }
     }
@@ -90,7 +92,7 @@ public class MktActorServiceImpl implements MktActorService {
         // check if actor exists in the database, if not then throw error
         Optional<MktActor> actor = mktActorRepository.findById(actorId);
 
-        if (!actor.isPresent()) {
+        if (actor != null && !actor.isPresent()) {
             throw new MktRuntimeException("Actor doesn't exists");
         }
 

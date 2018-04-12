@@ -1,6 +1,6 @@
 package com.intuit.marketplace.api.rest.v1.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.joda.time.DateTime;
 
 import javax.validation.constraints.NotNull;

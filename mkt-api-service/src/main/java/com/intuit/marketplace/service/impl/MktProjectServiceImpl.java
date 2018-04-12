@@ -1,5 +1,6 @@
 package com.intuit.marketplace.service.impl;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -64,7 +65,7 @@ public class MktProjectServiceImpl implements MktProjectService {
 
         // perform lookup to see if actor exists
         Optional<MktActor> seller = mktActorRepository.findById(model.getSellerId());
-        if (!seller.isPresent()) {
+        if (seller != null && !seller.isPresent()) {
             throw new MktRuntimeException("Seller doesn't exists, project creation failed");
         }
 
@@ -96,7 +97,8 @@ public class MktProjectServiceImpl implements MktProjectService {
         return response;
     }
 
-    private void performValidations(MktCreateProjectModel model) {
+    @VisibleForTesting
+    void performValidations(MktCreateProjectModel model) {
         // validate if input is null
         if (model == null) {
             throw new MktRuntimeException("Provided model is null, Project creation failed");
@@ -183,13 +185,13 @@ public class MktProjectServiceImpl implements MktProjectService {
 
         // get project entity and validate if it exists
         Optional<MktProject> project = mktProjectRepository.findById(projectId);
-        if (!project.isPresent()) {
+        if (project != null && !project.isPresent()) {
             throw new MktRuntimeException("project doesn't exists, can't post bid");
         }
 
         // get actor entity
         Optional<MktActor> buyer = mktActorRepository.findById(buyerId);
-        if (!buyer.isPresent()) {
+        if (buyer != null && !buyer.isPresent()) {
             throw new MktRuntimeException("buyer doesn't exists, can't post bid");
         }
 
@@ -200,7 +202,7 @@ public class MktProjectServiceImpl implements MktProjectService {
 
         // check that bidPrice is lesser than maximum budget of project
         if (model.getBidPrice().compareTo(project.get().getMaximumBudget()) > 0) {
-            throw new MktRuntimeException("Bid price is higher than maximum budger for a project, can't post bid");
+            throw new MktRuntimeException("Bid price is higher than maximum budget for a project, can't post bid");
         }
 
         // check if there exists a Bid for given buyer for given project
@@ -209,7 +211,7 @@ public class MktProjectServiceImpl implements MktProjectService {
                 buyer.get().getId());
 
         if (projectBids != null) {
-            throw new MktRuntimeException("Actor " + buyer.get().getId() + "has already placed a bid on this project");
+            throw new MktRuntimeException("Actor " + buyer.get().getId() + " has already placed a bid on this project");
         }
 
         // passed data validation, go ahead and create record
@@ -242,13 +244,13 @@ public class MktProjectServiceImpl implements MktProjectService {
 
         // get project entity and validate if it exists
         Optional<MktProject> project = mktProjectRepository.findById(projectId);
-        if (!project.isPresent()) {
+        if (project != null && !project.isPresent()) {
             throw new MktRuntimeException("project doesn't exists, can't accept bid");
         }
 
         // get actor entity
         Optional<MktActor> buyer = mktActorRepository.findById(buyerId);
-        if (!buyer.isPresent()) {
+        if (buyer != null && !buyer.isPresent()) {
             throw new MktRuntimeException("buyer doesn't exists, can't accept bid");
         }
 
@@ -258,7 +260,7 @@ public class MktProjectServiceImpl implements MktProjectService {
                 buyer.get().getId());
 
         if (projectBids == null) {
-            throw new MktRuntimeException("Actor " + buyer.get().getId() + "have not placed a bid on this project " + project.get().getId());
+            throw new MktRuntimeException("Buyer " + buyer.get().getId() + " has not placed a bid on this project " + project.get().getId());
         }
 
         // passed data validation, update the bid status

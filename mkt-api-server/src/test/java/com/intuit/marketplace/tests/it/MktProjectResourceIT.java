@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateActorModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
+import com.intuit.marketplace.api.rest.v1.response.MktProjectResponse;
 import com.intuit.marketplace.data.enums.MktActorType;
 import com.intuit.marketplace.tests.config.TestConfig;
 import org.junit.Before;
@@ -11,7 +12,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,8 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestConfig.class)
-@AutoConfigureMockMvc
 public class MktProjectResourceIT {
+
+    @Inject
+    private TestRestTemplate restTemplate;
 
     @Inject
     private WebApplicationContext context;
@@ -60,11 +67,14 @@ public class MktProjectResourceIT {
         seller.setLastName("Seller");
         seller.setRequestGuid(UUID.randomUUID());
 
-        mockMvc.perform(get("mkt/api/v1/projects")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andDo(print());
-//                .
-//                .andExpect(status().isOk());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        String response = restTemplate.postForObject("mkt/api/v1/projects", entity, String.class);
+
+        System.out.println("BhargavResult:::" + response);
+
+//        final ResponseEntity entity = this.restTemplate.getForObject("mkt/api/v1/projects", MktProjectResponse.class, u);
 
         // call to create actor
 //        mockMvc.perform(post("mkt/api/v1/actors").content(objectMapper.writeValueAsString(seller)))

@@ -1,7 +1,6 @@
 package com.intuit.marketplace.springboot;
 
 import com.intuit.marketplace.config.MktApplicationConfig;
-import com.intuit.marketplace.config.MktSwaggerConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
