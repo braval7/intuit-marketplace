@@ -1,5 +1,6 @@
 package com.intuit.marketplace.api.rest.v1;
 
+import com.intuit.marketplace.api.rest.v1.model.MktAcceptProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -74,11 +75,11 @@ public class MktProjectResourceImpl implements MktProjectResource {
     }
 
     @Override
-    public Response acceptProjectBid(Long projectId,Long buyerId) {
+    public Response acceptProjectBid(Long projectId,Long buyerId, MktAcceptProjectBidModel model) {
         LOGGER.info("Accepting a bid for projetId {} for buyerId {}", projectId, buyerId);
 
         // call the service
-        MktBaseResponse response = mktProjectService.acceptProjectBid(projectId, buyerId);
+        MktBaseResponse response = mktProjectService.acceptProjectBid(projectId, buyerId, model);
         // return response
         return Response.status(Response.Status.OK).entity(response).build();
     }

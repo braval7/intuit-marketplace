@@ -1,5 +1,6 @@
 package com.intuit.marketplace.service;
 
+import com.intuit.marketplace.api.rest.v1.model.MktAcceptProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -42,7 +43,8 @@ public interface MktProjectService {
      *
      * @param projectId
      * @param buyerId
+     * @param model
      * @return
      */
-    MktBaseResponse acceptProjectBid(Long projectId, Long buyerId);
+    MktBaseResponse acceptProjectBid(Long projectId, Long buyerId, MktAcceptProjectBidModel model);
 }

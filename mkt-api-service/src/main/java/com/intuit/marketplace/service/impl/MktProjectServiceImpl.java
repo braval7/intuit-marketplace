@@ -1,6 +1,7 @@
 package com.intuit.marketplace.service.impl;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.intuit.marketplace.api.rest.v1.model.MktAcceptProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -252,7 +253,7 @@ public class MktProjectServiceImpl implements MktProjectService {
 
     @Override
     @Transactional
-    public MktBaseResponse acceptProjectBid(Long projectId, Long buyerId) {
+    public MktBaseResponse acceptProjectBid(Long projectId, Long buyerId, MktAcceptProjectBidModel model) {
         LOGGER.info("executing acceptBid");
 
         // do data validation
@@ -260,8 +261,8 @@ public class MktProjectServiceImpl implements MktProjectService {
             throw new MktRuntimeException("ProjectId/buyerId is null, can't accept bid");
         }
 
-        // TODO check for idempotency through requestGuid,
-        // though this is covered through unique constraint on actor, project
+        // check for idempotency
+        mktProjectHelper.checkForIdempotency(model.getRequestGuid());
 
         // get project entity and validate if it exists
         Optional<MktProject> project = mktProjectRepository.findById(projectId);
@@ -291,6 +292,7 @@ public class MktProjectServiceImpl implements MktProjectService {
         LOGGER.info("Bid accepted successfully");
 
         MktBaseResponse response = new MktBaseResponse();
+        response.setRequestGuid(model.getRequestGuid());
         response.setId(projectBids.getId());
 
         return response;

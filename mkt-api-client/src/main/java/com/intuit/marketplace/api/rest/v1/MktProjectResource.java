@@ -1,5 +1,6 @@
 package com.intuit.marketplace.api.rest.v1;
 
+import com.intuit.marketplace.api.rest.v1.model.MktAcceptProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectModel;
@@ -74,7 +75,8 @@ public interface MktProjectResource {
             @ApiResponse(code = 400, message = "Project does not exists"),
             @ApiResponse(code = 400, message = "Buyer does not exists"),
             @ApiResponse(code = 500, message = "Unexpected failure") })
-    Response acceptProjectBid(@PathParam("projectId") Long projectId, @PathParam("buyerId") Long buyerId);
+    Response acceptProjectBid(@PathParam("projectId") Long projectId, @PathParam("buyerId") Long buyerId,
+                              @Valid MktAcceptProjectBidModel model);
 
     @GET
     @Path("/")

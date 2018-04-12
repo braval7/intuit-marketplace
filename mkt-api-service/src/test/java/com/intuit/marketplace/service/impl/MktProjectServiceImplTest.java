@@ -1,5 +1,6 @@
 package com.intuit.marketplace.service.impl;
 
+import com.intuit.marketplace.api.rest.v1.model.MktAcceptProjectBidModel;
 import com.intuit.marketplace.api.rest.v1.model.MktBaseResponse;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateActorModel;
 import com.intuit.marketplace.api.rest.v1.model.MktCreateProjectBidModel;
@@ -8,7 +9,6 @@ import com.intuit.marketplace.data.domain.MktActor;
 import com.intuit.marketplace.data.domain.MktProject;
 import com.intuit.marketplace.data.domain.MktProjectBids;
 import com.intuit.marketplace.data.enums.MktActorType;
-import com.intuit.marketplace.data.enums.MktProjectBidStatus;
 import com.intuit.marketplace.data.repository.MktActorRepository;
 import com.intuit.marketplace.data.repository.MktProjectBidsRepository;
 import com.intuit.marketplace.data.repository.MktProjectRepository;
@@ -26,7 +26,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
@@ -430,11 +429,14 @@ public class MktProjectServiceImplTest {
         MktProjectBids projectBids = Mockito.mock(MktProjectBids.class);
         when(projectBids.getId()).thenReturn(1L);
 
+        MktAcceptProjectBidModel model = new MktAcceptProjectBidModel();
+        model.setRequestGuid(UUID.randomUUID());
+
         when(mktProjectBidsRepository.save(any(MktProjectBids.class))).thenReturn(projectBids);
         when(mktProjectBidsRepository.findProjectBidsByProjectAndActor(2L, 1L)).thenReturn(projectBids);
 
         // call service
-        MktBaseResponse response = mktProjectService.acceptProjectBid(project.getId(), actor.getId());
+        MktBaseResponse response = mktProjectService.acceptProjectBid(project.getId(), actor.getId(), model);
 
         // verify response
         verify(mktActorRepository, times(1)).findById(1L);
@@ -460,9 +462,12 @@ public class MktProjectServiceImplTest {
         Optional<MktProject> optionalProject = Optional.ofNullable(null);
         when(mktProjectRepository.findById(2L)).thenReturn(optionalProject);
 
+        MktAcceptProjectBidModel model = new MktAcceptProjectBidModel();
+        model.setRequestGuid(UUID.randomUUID());
+
         // call service
         try {
-            mktProjectService.acceptProjectBid(project.getId(), actor.getId());
+            mktProjectService.acceptProjectBid(project.getId(), actor.getId(), model);
             fail("This code should not have been executed");
         } catch (Exception e) {
             assertEquals("Wrong exception thrown", e.getClass(), MktRuntimeException.class);
@@ -494,9 +499,12 @@ public class MktProjectServiceImplTest {
         Optional<MktProject> optionalProject = Optional.ofNullable(project);
         when(mktProjectRepository.findById(2L)).thenReturn(optionalProject);
 
+        MktAcceptProjectBidModel model = new MktAcceptProjectBidModel();
+        model.setRequestGuid(UUID.randomUUID());
+
         // call service
         try {
-            mktProjectService.acceptProjectBid(project.getId(), actor.getId());
+            mktProjectService.acceptProjectBid(project.getId(), actor.getId(), model);
             fail("This code should not have been executed");
         } catch (Exception e) {
             assertEquals("Wrong exception thrown", e.getClass(), MktRuntimeException.class);
@@ -530,9 +538,12 @@ public class MktProjectServiceImplTest {
 
         when(mktProjectBidsRepository.findProjectBidsByProjectAndActor(2L, 1L)).thenReturn(null);
 
+        MktAcceptProjectBidModel model = new MktAcceptProjectBidModel();
+        model.setRequestGuid(UUID.randomUUID());
+
         // call service
         try {
-            mktProjectService.acceptProjectBid(project.getId(), actor.getId());
+            mktProjectService.acceptProjectBid(project.getId(), actor.getId(), model);
             fail("This code should not have been executed");
         } catch (Exception e) {
             assertEquals("Wrong exception thrown", e.getClass(), MktRuntimeException.class);
