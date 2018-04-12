@@ -8,6 +8,9 @@ package com.intuit.marketplace.service.exception;
  */
 public class MktRuntimeException extends RuntimeException {
 
+    public MktRuntimeException() {
+    }
+
     public MktRuntimeException(String message) {
         super(message);
     }
