@@ -18,6 +18,7 @@ import com.intuit.marketplace.service.MktActorService;
 import com.intuit.marketplace.service.MktProjectService;
 import com.intuit.marketplace.service.exception.MktRuntimeException;
 import com.intuit.marketplace.service.scheduler.MktAcceptProjectBidScheduler;
+import com.intuit.marketplace.service.util.MktProjectHelper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -58,12 +59,18 @@ public class MktProjectServiceImpl implements MktProjectService {
     @Inject
     private ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
+    @Inject
+    private MktProjectHelper mktProjectHelper;
+
     @Override
     @Transactional
     public MktBaseResponse createProject(MktCreateProjectModel model) {
         LOGGER.info("executing createProject");
         // do data validations
         performValidations(model);
+
+        // check for idempotency
+        mktProjectHelper.checkForIdempotency(model.getRequestGuid());
 
         // perform lookup to see if actor exists
         Optional<MktActor> seller = mktActorRepository.findById(model.getSellerId());
@@ -191,6 +198,9 @@ public class MktProjectServiceImpl implements MktProjectService {
             throw new MktRuntimeException("ProjectId/buyerId or model is null, can't post bid");
         }
 
+        // check for idempotency
+        mktProjectHelper.checkForIdempotency(model.getRequestGuid());
+
         // get project entity and validate if it exists
         Optional<MktProject> project = mktProjectRepository.findById(projectId);
         if (project != null && !project.isPresent()) {
@@ -249,6 +259,9 @@ public class MktProjectServiceImpl implements MktProjectService {
         if (projectId == null || buyerId == null) {
             throw new MktRuntimeException("ProjectId/buyerId is null, can't accept bid");
         }
+
+        // TODO check for idempotency through requestGuid,
+        // though this is covered through unique constraint on actor, project
 
         // get project entity and validate if it exists
         Optional<MktProject> project = mktProjectRepository.findById(projectId);

@@ -11,6 +11,7 @@ import com.intuit.marketplace.data.enums.MktActorType;
 import com.intuit.marketplace.data.repository.MktActorRepository;
 import com.intuit.marketplace.service.MktActorService;
 import com.intuit.marketplace.service.exception.MktRuntimeException;
+import com.intuit.marketplace.service.util.MktProjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,12 +34,18 @@ public class MktActorServiceImpl implements MktActorService {
     @Inject
     private MktActorRepository mktActorRepository;
 
+    @Inject
+    private MktProjectHelper mktProjectHelper;
+
     @Override
     public MktBaseResponse createActor(MktCreateActorModel model) {
 
         LOGGER.info("executing createActor");
         // do data validations
         performValidations(model);
+
+        // check for idempotency
+        mktProjectHelper.checkForIdempotency(model.getRequestGuid());
 
         // create MktActor object
         MktActor actor = new MktActor();
@@ -64,6 +71,10 @@ public class MktActorServiceImpl implements MktActorService {
         // validate if input is null
         if (model == null) {
             throw new MktRuntimeException("Provided model is null, Actor creation failed");
+        }
+
+        if (model.getRequestGuid() == null) {
+            throw new MktRuntimeException("Request guid can't be null, Actor creation failed");
         }
 
         // check for required fields

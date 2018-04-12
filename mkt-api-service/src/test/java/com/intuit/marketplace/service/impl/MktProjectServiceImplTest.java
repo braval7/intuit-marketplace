@@ -15,6 +15,7 @@ import com.intuit.marketplace.data.repository.MktProjectRepository;
 import com.intuit.marketplace.service.MktActorService;
 import com.intuit.marketplace.service.exception.MktRuntimeException;
 import com.intuit.marketplace.service.scheduler.MktAcceptProjectBidScheduler;
+import com.intuit.marketplace.service.util.MktProjectHelper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -34,6 +35,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,9 +68,13 @@ public class MktProjectServiceImplTest {
     @Mock
     private MktActorRepository mktActorRepository;
 
+    @Mock
+    private MktProjectHelper mktProjectHelper;
+
     @Before
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
+        doNothing().when(mktProjectHelper).checkForIdempotency(any(UUID.class));
     }
 
     @Test
@@ -554,7 +560,7 @@ public class MktProjectServiceImplTest {
         MktCreateProjectModel model = new MktCreateProjectModel();
         model.setRequestGuid(UUID.randomUUID());
         model.setDescription("Description");
-        model.setLastDayForBids(DateTime.now(DateTimeZone.UTC));
+        model.setLastDayForBids(DateTime.now(DateTimeZone.UTC).plusHours(1));
         model.setMaximumBudget(BigDecimal.TEN);
         model.setSellerId(1L);
 

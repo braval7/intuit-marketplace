@@ -4,6 +4,7 @@ import com.intuit.marketplace.service.MktActorService;
 import com.intuit.marketplace.service.MktProjectService;
 import com.intuit.marketplace.service.impl.MktActorServiceImpl;
 import com.intuit.marketplace.service.impl.MktProjectServiceImpl;
+import com.intuit.marketplace.service.util.MktProjectHelper;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,12 @@ public class MktProjectServiceConfig {
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MktActorService mktActorService() {
         return new MktActorServiceImpl();
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public MktProjectHelper mktProjectHelper() {
+        return new MktProjectHelper();
     }
 
     @Bean

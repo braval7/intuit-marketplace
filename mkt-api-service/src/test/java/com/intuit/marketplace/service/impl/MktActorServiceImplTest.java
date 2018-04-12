@@ -7,12 +7,14 @@ import com.intuit.marketplace.data.domain.MktActor;
 import com.intuit.marketplace.data.enums.MktActorType;
 import com.intuit.marketplace.data.repository.MktActorRepository;
 import com.intuit.marketplace.service.exception.MktRuntimeException;
+import com.intuit.marketplace.service.util.MktProjectHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +22,8 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +42,9 @@ public class MktActorServiceImplTest {
     @Mock
     private MktActorRepository mktActorRepository;
 
+    @Mock
+    private MktProjectHelper mktProjectHelper;
+
     @Before
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
@@ -50,6 +57,7 @@ public class MktActorServiceImplTest {
         MktActor actor = Mockito.mock(MktActor.class);
         when(actor.getId()).thenReturn(1L);
         when(mktActorRepository.save(any(MktActor.class))).thenReturn(actor);
+        doNothing().when(mktProjectHelper).checkForIdempotency(mockModel.getRequestGuid());
 
         // call service
         MktBaseResponse response = mktActorService.createActor(mockModel);
