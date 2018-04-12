@@ -128,6 +128,35 @@ public class MktProjectServiceImplTest {
     }
 
     @Test
+    public void createProjectWhenShouldFailWhenLastDayForBidsInThePast() {
+        // create mock data
+        MktCreateProjectModel model = createProjectModel();
+        model.setLastDayForBids(DateTime.now(DateTimeZone.UTC).minusDays(1));
+
+        MktActor actor = Mockito.mock(MktActor.class);
+        when(actor.getId()).thenReturn(1L);
+        when(actor.getActorType()).thenReturn(MktActorType.SELLER);
+        when(actor.getEmail()).thenReturn("Email@emailTest.com");
+        Optional<MktActor> optionalActor = Optional.ofNullable(actor);
+        when(mktActorRepository.findById(1L)).thenReturn(optionalActor);
+
+        // call service
+        try {
+            mktProjectService.createProject(model);
+            fail("This code should not have been executed");
+        } catch (Exception e) {
+            assertEquals("Wrong exception thrown", e.getClass(), MktRuntimeException.class);
+            assertEquals("Wrong message when actor not found",
+                    "Project's last day for bids can't be in the past, project creation failed", e.getMessage());
+        }
+
+        // validate response
+        verify(mktActorRepository, times(1)).findById(1L);
+        verify(mktProjectRepository, times(0)).save(any(MktProject.class));
+        verify(threadPoolTaskScheduler, times(0)).schedule(any(MktAcceptProjectBidScheduler.class), any(Date.class));
+    }
+
+    @Test
     public void createProjectWithBuyerAsActorShouldFail() {
         // create mock data
         MktCreateProjectModel model = createProjectModel();

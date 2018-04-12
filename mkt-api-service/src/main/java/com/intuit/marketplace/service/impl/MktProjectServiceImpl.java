@@ -18,6 +18,8 @@ import com.intuit.marketplace.service.MktActorService;
 import com.intuit.marketplace.service.MktProjectService;
 import com.intuit.marketplace.service.exception.MktRuntimeException;
 import com.intuit.marketplace.service.scheduler.MktAcceptProjectBidScheduler;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -72,6 +74,12 @@ public class MktProjectServiceImpl implements MktProjectService {
         // check if actor type is SELLER
         if (seller.isPresent() && seller.get().getActorType() != MktActorType.SELLER) {
             throw new MktRuntimeException("Given actor is not a project seller, project creation failed");
+        }
+
+        // check that last date for bid is not in the past
+        if (model.getLastDayForBids().withZone(DateTimeZone.UTC)
+                .isBefore(DateTime.now(DateTimeZone.UTC))) {
+            throw new MktRuntimeException("Project's last day for bids can't be in the past, project creation failed");
         }
 
         // convert to MktProject object
