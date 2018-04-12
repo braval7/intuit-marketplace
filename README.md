@@ -1,34 +1,65 @@
-# intuit-marketplace
-Intuit marketplace assessment
+# Marketplace spring boot application
+=================
 
-1. Compile the project from parent directory using "mvn -U clean install"
-2. After that run the server by going into mkt-api-server and running the command "mvn spring-boot:run"
-3. Go to http://localhost:8080/mkt/api/v1/projects in browser to get dummy response (to make sure server is up)
+About
+-----
+This project is a project created for intuit assessment. Technology used for this projects, 
+- Maven 
+  - Build tool which gives lot of flexibility in managing dependency
+- Spring Boot 
+  - Spring boot is a defacto standard in industry to create quick microservices applications
+  - Spring data for crud operations
+  - Spring boot scheduler to schedule tasks at given date/time (in this example, project's last date to accept bids)
+- h2 
+  - In memory database for this application
+- Rest Easy
+  - I chose resteasy over Spring MVC because resteasy is matured compared to Spring MVC. 
+- Junit/Mockito
+  - For unit testing mockito and junit
 
-Configuration of Swagger is work in progress. 
+- I tried integrating Swagger 2 and Integration Tests, but since I using RestEasy, Swagger 2 is not supported with SpringBoot. And similarly mockMvc integration tests are not supported either. 
+- I'll continue adding this integration in more standard way of registering filter but that may take some time. 
 
 
-Step 1: Create Actors using below url and payloads,
+Project Structure
+------------------
+* This is multimodule spring-boot project with following major modules,
+  * mkt-api-client - This project contains all the Rest end points, request and response models.
+  * mkt-domain-object - This project contains all the JPA entity, Relationship between entities, and JPA Repositories
+  * mkt-api-service - This project is implementation of APIs defined in **mkt-api-client** and contains business logic
+  * mkt-api-server - This project is only for the SpringBoot application server
 
-POST http://localhost:8080/mkt/api/v1/actors
 
-{
+Try it out!
+-----------
+* **Do it yourself** and build and deploy it using your favourite IDE or command prompt
+* Build the project from parent directory using 'mvn clean install' 
+* Navigate to **mkt-api-server** and run the application  with `mvn spring-boot:run`
+
+
+
+URLs and Payloads
+-----------------
+
+Check following URLs (running this example on your localhost):
+
+1. [Create Actor](http://localhost:8080/mkt/api/v1/actors)
+  - > http://localhost:8080/mkt/api/v1/actors (POST)
+  - > {
   "requestGuid": "4b2ccaae-f746-4c8e-ac98-d38ba7dc377d",
   "firstName": "Testing",
   "lastName": "Seller",
   "email": "seller@testing.com",
   "actorType": "SELLER"
 }
-
-{
+  - > {
   "requestGuid": "cb2ccaae-f746-4c8e-ac98-d38ba7dc377d",
   "firstName": "Testing",
   "lastName": "Buyer",
   "email": "buyer@testing.com",
   "actorType": "BUYER"
 }
-
-{
+  - > {
   "requestGuid": "de2ccaae-f746-4c8e-ac98-d38ba7dc377d",
   "firstName": "Testing1",
   "lastName": "Buyer1",
@@ -36,16 +67,13 @@ POST http://localhost:8080/mkt/api/v1/actors
   "actorType": "BUYER"
 }
 
+2. [Validate actor](http://localhost:8080/mkt/api/v1/actors/{actorId})
+  - > http://localhost:8080/mkt/api/v1/actors/{actorId} (GET)
+  - Replace '{actorId}'' with Id you got from response of Step #1
 
-Step 2: Validate that actors are created properly,
-
-GET http://localhost:8080/mkt/api/v1/actors/{actorId}
-
-
-Step 3: Create Project using below URL and payload,
-
-POST http://localhost:8080/mkt/api/v1/projects
-{
+3. [Create Actor](http://localhost:8080/mkt/api/v1/projects)
+  - > http://localhost:8080/mkt/api/v1/projects (POST)
+  - > {
   "requestGuid": "cb2ccaae-f746-4c8e-ac98-d38ba7dc377d",
   "sellerId": "1",
   "maximumBudget": "10000.00",
@@ -53,21 +81,19 @@ POST http://localhost:8080/mkt/api/v1/projects
   "description": "Spring Boot Project"
 }
 
-Step 4: Validate that project got created using below URL,
+4. [Validate project](http://localhost:8080/mkt/api/v1/projects/{projectId})
+  - > http://localhost:8080/mkt/api/v1/projects/{projectId} (GET)
+  - > Replace '{projectId}'' with Id you got from response of Step #3
 
-GET http://localhost:8080/mkt/api/v1/projects/{projectId}
-
-Step 5: Post a bid on project for actor of type buyer using below URL,
-
-POST http://localhost:8080/mkt/api/v1/projects/{projectId}/post-bid/{buyerId}
-
-{
+5. [Post a bid on project](http://localhost:8080/mkt/api/v1/projects/{projectId}/post-bid/{buyerId})
+  - > http://localhost:8080/mkt/api/v1/projects/{projectId}/post-bid/{buyerId} (POST)
+  - > {
   "requestGuid": "7b2ccaae-f746-4c8e-ac98-d38ba7dc377d",
   "bidPrice": "9000.00"
 }
+  - > Replace '{projectId}' and '{buyerId}' with values received from Step #3 and #1 respsectively
 
-
-Step 6: Optionally, seller can go ahead and accept the bid manually (scheduler will do this internally)
-
-POST http://localhost:8080/mkt/api/v1/projects/{projectId}/accept-bid/{buyerId}
-
+6. [Accept a bid on project](http://localhost:8080/mkt/api/v1/projects/{projectId}/accept-bid/{buyerId}) 
+  - > http://localhost:8080/mkt/api/v1/projects/{projectId}/accept-bid/{buyerId} (POST)
+  - > Replace '{projectId}' and '{buyerId}' with values received from Step #3 and #1 respsectively
+  - *This step is optional, if not done the scheduler will ACCEPT lower bid automatically*
