@@ -101,3 +101,12 @@ Check following URLs (running this example on your localhost):
   }
   - > Replace '{projectId}' and '{buyerId}' with values received from Step #3 and #1 respsectively
   - *This step is optional, if not done the scheduler will ACCEPT lower bid automatically*
+
+
+Requested Information
+-------------------------
+* The time the exercise took (after dev environment is set up): With regression and unit tests 8-10 hours. 
+* Exercise Difficulty: Easy, Moderate, Difficult, Very Difficult: Moderate
+* How did you feel about the exercise itself? (1 lowest, 10 highest—awesome way to assess coding ability): 9 great way to assess coding ability
+* How do you feel about coding an exercise as a step in the interview process?  (1 lowest, 10 highest—awesome way to assess coding ability): 9 great way to assess coding ability
+* What would you change in the exercise and/or process?: Things were clear so no need to change anything. 
