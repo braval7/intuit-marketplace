@@ -37,29 +37,4 @@ public class MktApiApplication extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(MktApiApplication.class, args);
     }
-//
-//    @Bean
-//    public FilterRegistrationBean filterRegistrationBean() {
-//        Map<String, String> initParams = new HashMap<>();
-//        initParams.put("javax.ws.rs.Application", RestEasyConfig.class.getCanonicalName());
-//
-//        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-//        registrationBean.setFilter(new FilterDispatcher());
-//        registrationBean.setInitParameters(initParams);
-//        return registrationBean;
-//    }
-
-//    @Bean
-//    public ServletContextInitializer initializer() {
-//        return servletContext -> {
-//            // RestEasy configuration
-//            servletContext.setInitParameter("resteasy.scan", "true");
-//            servletContext.setInitParameter("resteasy.servlet.mapping.prefix", "/services");
-//        };
-//    }
-
-//    @Override
-//    public void onStartup(ServletContext servletContext) throws ServletException {
-//        servletContext.setInitParameter("com.sun.faces.expressionFactory", "org.apache.el.ExpressionFactoryImpl");
-//    }
 }
