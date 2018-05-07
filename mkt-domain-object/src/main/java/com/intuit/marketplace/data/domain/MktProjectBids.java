@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,11 +35,15 @@ public class MktProjectBids extends MktDateEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    // one project can have many project bids
+    // we don't need to have project here, just simple Long is sufficient
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROJECT_ID", nullable = false)
     private MktProject project;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    // one actor can have many project bids
+    // we don't need to have actor here, just simple Long is sufficient
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BUYER_ID", nullable = false)
     private MktActor actor;
 
