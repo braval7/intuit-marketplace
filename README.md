@@ -12,12 +12,12 @@ This project is a project created for intuit assessment. Technology used for thi
   - Spring boot scheduler to schedule tasks at given date/time (in this example, project's last date to accept bids)
 - h2 
   - In memory database for this application
-- Rest Easy
-  - I chose resteasy over Spring MVC because resteasy is matured compared to Spring MVC. 
+- Jersey
+  - I chose jersey over Spring MVC because jersey is matured compared to Spring MVC. 
 - Junit/Mockito
   - For unit testing mockito and junit
 
-- I tried integrating Swagger 2 but since I am using RestEasy, Swagger 2 is not supported with SpringBoot.
+- I tried integrating Swagger 2 but since I am using Jersey, Swagger 2 is not supported with SpringBoot.
 - I'll continue adding this integration in more standard way of registering filter but that may take some time. 
 - Support for idempotency is there and that is on the POST APIs with the use of **requestGuid** and table MKT_REQUEST
 
